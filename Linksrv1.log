@@ -1,0 +1,11 @@
+Msg: Siblink versión BER-GP 1.0
+Msg: Oct 21 18:48:01
+Msg: Nuevo Banco de Entre Rios
+Msg: Obteniendo fecha de proceso ...
+Error: Falló inicio SetiPago java.sql.SQLException: Base table or view not found message from server: "Table 'linkdbase.SETIPAGO' doesn't exist" / DELETE FROM SETIPAGO WHERE SETIDATOS < '201014'
+Error: archivo FechaSFB.txt. Asume dia anterior.
+Msg: Fecha de proceso extract(mmdd) 1020
+Msg: Iniciando Socket ...
+java.sql.SQLException: Base table or view not found message from server: "Table 'linkdbase.SF' doesn't exist" / SELECT * FROM SF
+Fin S&F propio
+Msg: Cierre Siblink. Oct 21 18:48:32

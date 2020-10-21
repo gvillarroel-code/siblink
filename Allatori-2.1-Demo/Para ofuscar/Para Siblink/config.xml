@@ -1,0 +1,13 @@
+<config>
+<jars>
+<jar
+
+in= "SibLinkx.jar"
+out="SibLink.jar"   />
+
+</jars>
+
+<keep-names>
+<class template="class LinkServer"/>    </keep-names>
+<property name="log-file" value="log.xml"/>
+</config>

@@ -1,0 +1,1 @@
+java -Xmx128m -Xms128m -cp ..\..\..\lib\allatori.jar com.allatori.Watermark -add AddWatermark.xml

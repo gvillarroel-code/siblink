@@ -1,0 +1,12 @@
+<config>
+    <jars basedir="dist">
+        <jar in="test.jar" out="test.jar"/>
+        <jar in="mousegestures-1.2.jar" out="mousegestures-1.2.jar"/>
+    </jars>
+
+    <keep-names>
+        <class template="class *.TestFrame"/>
+    </keep-names>
+
+    <property name="log-file" value="log.xml"/>
+</config>

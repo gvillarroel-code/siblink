@@ -1,0 +1,15 @@
+<config>
+    <jars>
+        <jar in="test.jar" out="obf-test.jar"/>
+    </jars>
+
+    <classpath>
+        <jar name="mousegestures-1.2.jar"/>
+    </classpath>
+
+    <keep-names>
+        <class template="class *.TestFrame"/>
+    </keep-names>
+
+    <property name="log-file" value="log.xml"/>
+</config>

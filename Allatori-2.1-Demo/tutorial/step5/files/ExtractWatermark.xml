@@ -1,0 +1,7 @@
+<config>
+    <jars>
+        <jar in="single.jar"/>
+    </jars>
+
+    <watermark key="secure-key-to-extract-watermark"/>
+</config>

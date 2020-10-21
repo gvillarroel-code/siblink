@@ -1,0 +1,683 @@
+<html>
+<head>
+<title>Allatori Obfuscator Documentation</title>
+<style type="text/css"><!--
+html {
+ font-family: Verdana, Geneva, Arial, sans-serif;
+ font-size: 16px;
+ line-height: 140%;
+ text-align: justify;
+ background-color: #dedede;
+}
+
+body {
+ font-family: Verdana, Geneva, Arial, sans-serif;
+ font-size: 16px;
+ line-height: 140%;
+ text-align: justify;
+ padding: 30px 80px 30px 50px;
+}
+
+a {
+ color: #e96c15;
+ text-decoration: underline;
+}
+
+td {
+ padding: 3px 15px 0px 15px;
+}
+
+pre {
+ font-family: "Courier New", Courier, monospace;
+ padding: 0px;
+ margin: 0px;
+}
+
+.title {
+ font-family: Verdana, Geneva, Arial, sans-serif;
+ font-size: 22px;
+ font-weight: bold;
+ color: #1954ab;
+ padding-top: 60px;
+ padding-bottom: 30px;
+}
+
+.title2 {
+ font-family: Verdana, Geneva, Arial, sans-serif;
+ font-size: 18px;
+ font-weight: bold;
+ color: #1954ab;
+ padding-top: 40px;
+ padding-bottom: 20px;
+}
+
+.proptitle {
+ font-weight: bold;
+ padding-left: 20px;
+}
+
+.propmeaning {
+ padding-left: 50px;
+}
+
+.codeinline {
+ display: inline;
+ font-family: "Courier New", Courier, monospace;
+}
+--></style>
+</head>
+<body>
+<h1>Allatori Obfuscator Documentation</h1>
+Basic information about using Allatori Obfuscator and usage samples can be found in the <a href="../tutorial/index.html">Tutorial</a>.
+<br>Basic information about the obfuscation can be found in the <a href="http://www.allatori.com/faq.html" target="_blank">FAQ</a>.
+<br><br><b>Contents</b>
+<br><a href="#structure">1 Configuration file structure</a>
+<br>&nbsp;&nbsp;&nbsp;<a href="#jars">1.1 <div class="codeinline"><b>Jars</b></div> element</a>
+<br>&nbsp;&nbsp;&nbsp;<a href="#classpath">1.2 <div class="codeinline"><b>Classpath</b></div> element</a>
+<br>&nbsp;&nbsp;&nbsp;<a href="#keep-names">1.3 <div class="codeinline"><b>Keep-names</b></div> element</a>
+<br>&nbsp;&nbsp;&nbsp;<a href="#watermark">1.4 <div class="codeinline"><b>Watermark</b></div> element</a>
+<br>&nbsp;&nbsp;&nbsp;<a href="#property">1.5 <div class="codeinline"><b>Property</b></div> element</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#property1">1.5.1 <div class="codeinline">log-file</div></a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#property2">1.5.2 <div class="codeinline">default-package</div></a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#property3">1.5.3 <div class="codeinline">line-numbers</div></a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#property4">1.5.4 <div class="codeinline">string-encryption</div></a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#property5">1.5.5 <div class="codeinline">member-reorder</div></a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#property6">1.5.6 <div class="codeinline">control-flow-obfuscation</div></a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#property7">1.5.7 <div class="codeinline">fields-naming</div></a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#property8">1.5.8 <div class="codeinline">methods-naming</div></a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#property9">1.5.9 <div class="codeinline">local-variables-naming</div></a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#property10">1.5.10 <div class="codeinline">random-seed</div></a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#property11">1.5.11 <div class="codeinline">incremental-obfuscation</div></a>
+<br>&nbsp;&nbsp;&nbsp;<a href="#expiry">1.6 <div class="codeinline"><b>Expiry</b></div> element</a>
+<br><a href="#common-settings">2 Common settings</a>
+<br><a href="#j2me-support">3 J2ME support (Sun Java Wireless Toolkit for CLDC plugin)</a>
+<br><a id="structure"></a><div class="title">1 Configuration File Structure</div>
+Allatori Obfuscator's configuration file is a xml file with the following structure:<br><br>
+<pre>
+&lt;config>
+    &lt;jars basedir="dir (optional)" single-jar="filename (optional)">
+        &lt;jar in="name1.jar" out="name1-obf.jar"/>
+        &lt;jar in="name2.jar" out="name2-obf.jar"/>
+        &lt;jar in="name3.war" out="name3-obf.war"/>
+        &lt;jar in="name4.ear" out="name4-obf.ear"/>
+        ...
+    &lt;/jars>
+
+    &lt;classpath basedir="dir (optional)">
+        &lt;jar name="lib1.jar"/>
+        &lt;jar name="lib2.jar"/>
+        ...
+    &lt;/classpath>
+
+    &lt;keep-names>
+        &lt;class template="class ClassName"/>
+        &lt;class access="protected+"/>
+        &lt;class template="class *.SomeClass" ignore="yes">
+            &lt;field template="private+ *"/>
+            &lt;field access="protected+"/>
+            &lt;method template="private+ *(**)"/>
+            &lt;method access="protected+"/>
+        &lt;/class>
+        &lt;method template="private set*(java.lang.String, *)"/>
+        &lt;field template="private long fieldName"/>
+    &lt;/keep-names>
+
+    &lt;watermark key="secure-key" value="Information to be embedded"/>
+
+    &lt;property name="property-name" value="property-value"/>
+&lt;/config>
+</pre>
+<br><b>Note: all paths are resolved according to the configuration file location.</b>
+<br><b>Note 2:</b> If you run Allatori from Ant then you can reference properties defined in the Ant build file from the Allatori configuration file using standard Ant syntax: ${PropertyName}.
+
+
+<a id="jars"></a><div class="title">1.1 <div class="codeinline">Jars</div> Element</div>
+<div class="codeinline">Jars</div> element is used to set the jar (war, ear) files that should be obfuscated.
+It should contain at least one <div class="codeinline">jar</div> element that defines a pair of jars - original jar and the jar for the obfuscated classes.
+<br><br>The <div class="codeinline">jars</div> element has the following attributes:
+<br>1. <div class="codeinline">basedir</div> - optional; contains a directory name.
+Relative paths to the jar files will be resolved according to that directory.
+<br>2. <div class="codeinline">single-jar</div> - optional; contains a file name.
+If it is set than Allatori will create a single jar file with all obfuscated classes.
+<br><br>The nested <div class="codeinline">jar</div> elements have the following attributes:
+<br>1. <div class="codeinline">in</div> - required; contains the name of the jar file that should be obfuscated;
+<br>2. <div class="codeinline">out</div> - required; contains the name of the resulting obfuscated jar file.
+Can have the same value as <div class="codeinline">in</div>, in such case the specified jar will be overwritten with its obfuscated version.
+<br><br>Example:<br><br>
+<pre>
+    &lt;jars basedir="my-jars" single-jar="application.jar">
+        &lt;jar in="first.jar" out="first-obf.jar"/>
+        &lt;jar in="another-dir/second.jar" out="another-dir/second-obf.jar"/>
+    &lt;/jars>
+</pre>
+<br>In this example Allatori will take two jars for obfuscation (<i>my-jars/first.jar</i> and <i>my-jars/another-dir/second.jar</i>)
+and will produce the following files:
+<br><i>my-jars/first-obf.jar</i> - obfuscated vesrion of the <i>my-jars/first.jar</i>;
+<br><i>my-jars/another-dir/second-obf.jar</i> - obfuscated version of the <i>my-jars/another-dir/second.jar</i>;
+<br><i>my-jars/application.jar</i> - the jar that contains all classes of the both <i>my-jars/first-obf.jar</i> and <i>my-jars/another-dir/second-obf.jar</i> jars.
+
+<br><br><br>You can also use nested <div class="codeinline">dir</div> elements to read non-jared class files from directories.
+These elements have the following attributes:
+<br>1. <div class="codeinline">in</div> - required; contains the name of the directory with class files that should be obfuscated;
+<br>2. <div class="codeinline">out</div> - required; contains the name of the directory where obfuscated class files will be written.
+<br>Note that the output directory will not be emptied before writing new files to avoid accidental removal of data in the case of typo in the config.
+So you will need to empty the output directory before running Allatori (i.e. using Ant's delete task).
+<br><br>Example:<br><br>
+<pre>
+    &lt;jars>
+        &lt;dir in="dir-with-classes" out="dir-for-output"/>
+    &lt;/jars>
+</pre>
+
+
+<a id="classpath"></a><div class="title">1.2 <div class="codeinline">Classpath</div> Element</div>
+<div class="codeinline">Classpath</div> element is used to set the obfuscated application's classpath.
+It should contain at least one <div class="codeinline">jar</div> element with the name of the jar file.
+Note that it is not necessary to reference all jars that are needed by your application in the classpath section, but you should understand that missing classpath elements can result in a weaker obfuscation.
+Allatori will warn you about missing classes during the obfuscation process.
+<br><br>The <div class="codeinline">classpath</div> element has the following attributes:
+<br>1. <div class="codeinline">basedir</div> - optional; contains a directory name.
+Relative paths to the jar files will be resolved according to that directory.
+<br><br>The nested <div class="codeinline">jar</div> elements have the following attributes:
+<br>1. <div class="codeinline">name</div> - required; contains the name of the jar file that should be added to the classpath.
+The attribute can use wildcard syntax - '*' symbol matches any characters in the file name.
+<br><br>Example:<br><br>
+<pre>
+    &lt;classpath>
+        &lt!-- Add <i>library.jar</i> to the classpath -->
+        &lt;jar name="library.jar"/>
+        &lt!-- Add all jars in the <i>lib</i> directory to the classpath -->
+        &lt;jar name="lib/*.jar"/>
+    &lt;/classpath>
+</pre>
+
+
+<a id="keep-names"></a><div class="title">1.3 <div class="codeinline">Keep-names</div> Element</div>
+<div class="codeinline">Keep-names</div> element is the most important in the configuring Allatori Obfuscator.
+It defines the names of the classes, methods and fields that should not be renamed during the obfuscation process.
+If the obfuscated application is a library you should generally keep all publicly available API.
+For stand-alone alone applications you should keep at least the main class's name.
+You should also keep names of the classes that are used via reflection.
+<br><br>The <div class="codeinline">keep-names</div> element contains the following elements:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;<div class="codeinline">field</div> element specifies the fields which names should be unchanged;
+<br>&nbsp;&nbsp;&nbsp;&nbsp;<div class="codeinline">method</div> element specifies the methods which names should be unchanged;
+<br>&nbsp;&nbsp;&nbsp;&nbsp;<div class="codeinline">class</div> element specifies the classes which names should be unchanged, can in turn contain nested <div class="codeinline">field</div> and <div class="codeinline">method</div> elements.
+<br>These elements define rules for matching the names of the classes, fields and methods.
+Matched names will be kept unchanged.
+All elements can have either <div class="codeinline">access</div> or <div class="codeinline">template</div> attribute.
+<br><br>The <div class="codeinline">access</div> attribute matches access type and can have the following values:
+<br><table cellspacing="0" cellpadding="0" border="1">
+<tr><td><b>Value</b></td><td><b>Description</b></td></tr>
+<tr><td>private</td><td>matches classes, fields or methods with private access</td></tr>
+<tr><td>private+</td><td>matches classes, fields or methods with private or wider access</td></tr>
+<tr><td>package</td><td>matches classes, fields or methods with package access</td></tr>
+<tr><td>package+</td><td>matches classes, fields or methods with package or wider access</td></tr>
+<tr><td>protected</td><td>matches classes, fields or methods with protected access</td></tr>
+<tr><td>protected+</td><td>matches classes, fields or methods with protected or wider access</td></tr>
+<tr><td>public</td><td>matches classes, fields or methods with public access</td></tr>
+</table>
+<br><br>The <div class="codeinline">template</div> attribute has the format very similar to Java language syntax. Here is its formats for <div class="codeinline">class</div>, <div class="codeinline">field</div> and <div class="codeinline">method</div> elements:
+<br><br><b>1.</b> The <div class="codeinline">class</div> element is used for matching classes.
+Its <div class="codeinline">template</div> attribute has the following format:
+<div class="codeinline">"[modifiers]&nbsp;(class&nbsp;|&nbsp;interface)&nbsp;classname [extends&nbsp;classname] [implemets&nbsp;classname] [instanceof&nbsp;classname]"</div>.
+The '*' symbol in type or class name matches any number of characters.
+<br><div class="codeinline">template</div> attribute of the <div class="codeinline">class</div> element examples:
+<br><table cellspacing="0" cellpadding="0" border="1">
+<tr><td><b>Value</b></td><td><b>Description</b></td></tr>
+<tr><td>class&nbsp;*</td><td>Matches all classes</td></tr>
+<tr><td>interface&nbsp;*</td><td>Matches all interfaces</td></tr>
+<tr><td>class&nbsp;*abc*</td><td>Matches all classes which contain "abc" in the full qualified name</td></tr>
+<tr><td>class&nbsp;*&nbsp;extends&nbsp;java.util.Enumeration</td><td>Matches all classes extending java.util.Enumeration</td></tr>
+<tr><td>class&nbsp;*&nbsp;extends&nbsp;*.Enumeration</td><td>Matches all classes that extend Enumeration</td></tr>
+<tr><td>class&nbsp;*&nbsp;instanceof&nbsp;java.io.Serializable</td><td>Matches all classes that are instances of java.io.Serializable</td></tr>
+<tr><td>class&nbsp;*&nbsp;implements&nbsp;*.MouseListener</td><td>Matches all classes that implement MouseListener</td></tr>
+</table>
+
+<br><br><b>2.</b> The <div class="codeinline">field</div> element is used for matching fields.
+Its <div class="codeinline">template</div> attribute has the following format:
+<div class="codeinline">"[modifiers]&nbsp;[type]&nbsp;fieldname"</div>.
+The '*' symbol in type or field name matches any number of characters.
+<br><div class="codeinline">template</div> attribute of the <div class="codeinline">field</div> element examples:
+<br><table cellspacing="0" cellpadding="0" border="1">
+<tr><td><b>Value</b></td><td><b>Description</b></td></tr>
+<tr><td>private *</td><td>Matches all private fields</td></tr>
+<tr><td>private+ *</td><td>Matches all fields</td></tr>
+<tr><td>protected+ *</td><td>Matches all protected and public fields</td></tr>
+<tr><td>static *</td><td>Matches all static fields</td></tr>
+<tr><td>public static *</td><td>Matches all public static fields</td></tr>
+<tr><td>public int *</td><td>Matches all public integer fields</td></tr>
+<tr><td>java.lang.String *</td><td>Matches all String fields</td></tr>
+<tr><td>java.lang.* *</td><td>Matches all fields with type is in the java.lang package</td></tr>
+<tr><td>my*</td><td>Matches all fields which names start with "my"</td></tr>
+</table>
+
+<br><br><b>3.</b> The <div class="codeinline">method</div> element is used for matching methods.
+Its <div class="codeinline">template</div> attribute has the following format:
+<div class="codeinline">"[modifiers]&nbsp;[type]&nbsp;methodname(arguments)"</div>.
+The '*' symbol in type or method name matches any number of characters.
+The '*' symbol in arguments matches any single argument, to match any number of arguments use '**'.
+<br><div class="codeinline">template</div> attribute of the <div class="codeinline">method</div> element examples:
+<br><table cellspacing="0" cellpadding="0" border="1">
+<tr><td><b>Value</b></td><td><b>Description</b></td></tr>
+<tr><td>private&nbsp;*(**)</td><td>Matches all private methods</td></tr>
+<tr><td>private+&nbsp;*(**)</td><td>Matches all methods</td></tr>
+<tr><td>private+&nbsp;*(*)</td><td>Matches all methods with exactly one argument</td></tr>
+<tr><td>private+&nbsp;*(*,*)</td><td>Matches all methods with exactly two arguments</td></tr>
+<tr><td>private+&nbsp;*(java.lang.String)</td><td>Matches all methods with String argument</td></tr>
+<tr><td>private+&nbsp;*(java.lang.String,**)</td><td>Matches all methods with the first String argument</td></tr>
+<tr><td>private+&nbsp;*(java.lang.*)</td><td>Matches all methods with the argument which type is in java.lang package</td></tr>
+<tr><td>public&nbsp;get*(**)</td><td>Matches all public methods which names start with "get"</td></tr>
+<tr><td>public&nbsp;*abc*(**)</td><td>Matches all public methods which names contain "abc"</td></tr>
+<tr><td>private+&nbsp;int *(**)</td><td>Matches all public methods which return type is int</td></tr>
+</table>
+
+<br><br>If <div class="codeinline">field</div> or <div class="codeinline">method</div> elements are nested in the <div class="codeinline">class</div> element than they are applied only to the classes matched by the parent <div class="codeinline">class</div> element.
+If the parent element is <div class="codeinline">keep-names</div>, they are applied to all classes.
+<br><br>Example:<br><br>
+<pre>
+    &lt;keep-names>
+        &lt;!-- Matches classes with the name "Main" in any packages -->
+        &lt;class template="class *.Main"/>
+
+        &lt;!-- Matches classes with the name that ends with "Bean" -->
+        &lt;class template="class *Bean">
+            &lt;!-- Matches all fields -->
+            &lt;field access="private+"/>
+
+            &lt;!-- Matches public integer fields -->
+            &lt;field template="public int *"/>
+
+            &lt;!-- Matches all static fields -->
+            &lt;field template="static *"/>
+
+            &lt;!-- Matches protected and public String fields -->
+            &lt;field template="protected+ java.lang.String *"/>
+
+            &lt;!-- Matches all methods -->
+            &lt;method template="private+ *(**)"/>
+
+            &lt;!-- Matches all getter methods -->
+            &lt;method template="private+ get*(**)"/>
+
+            &lt;!-- Matches all methods with String argument -->
+            &lt;method template="private+ *(java.lang.String)"/>
+        &lt;/class>
+
+        &lt;!-- Matches serialVersionUID field in all classes -->
+        &lt;field template="static final long serialVersionUID"/>
+
+        &lt;!-- Matches writeObject methods in all classes -->
+        &lt;method template="writeObject(java.io.ObjectOutputStream)"/>
+
+        &lt;!-- Matches readObject methods in all classes -->
+        &lt;method template="readObject(java.io.ObjectInputStream)"/>
+    &lt;/keep-names>
+</pre>
+
+
+<a id="watermark"></a><div class="title">1.4 <div class="codeinline">Watermark</div> Element</div>
+<div class="codeinline">Watermark</div> element is used to set the key and value for the watermarking process.
+<br><br>The element has the following attributes:
+<br>1. <div class="codeinline">key</div> - required; the key that is used to embed a watermark into the application using steganography techniques;
+<br>2. <div class="codeinline">value</div> - required; any string that will be embedded into the application jars.
+It can be such information as copyright, customer name, company name or any other information that uniquely identifies the build.
+A watermark can be used to identify owners of the software or track the origin of a pirated copy.
+<br><br>Example:<br><br>
+<pre>
+    &lt;watermark key="secure-key-to-extract-watermark" value="Customer: John Smith; Date: xx.yy.zzzz"/>
+</pre>
+<br>Other examples of adding and extracting watermarks can be found in the tutorial:
+<a href="../tutorial/step5/step5.html">Step&nbsp;5</a>,
+<a href="../tutorial/step6/step6.html">Step&nbsp;6</a>,
+<a href="../tutorial/step7/step7.html">Step&nbsp;7</a>.
+
+
+<a id="property"></a><div class="title">1.5 <div class="codeinline">Property</div> Element</div>
+<div class="codeinline">Property</div> element is used to set different obfuscation properties.
+<br><br>The element has the following attributes:
+<br>1. <div class="codeinline">name</div> - required; the name of the property;
+<br>2. <div class="codeinline">value</div> - required; the value for the property.
+<br><br>Allatori Obfuscator supports the following properties:
+
+<div>
+<a id="property1"></a>
+<div class="title2">1.5.1 <div class="codeinline">log-file</div></div>
+<b>Value:</b> the name of the log file to be created<br>
+<b>Default:</b> none
+<br><br>Allatori will write obfuscation log to the specified file.
+If the property is not set no log file will be created.
+<br><br>Examples:<br><br>
+<pre>
+    &lt;property name="log-file" value="log.xml"/>
+    &lt;property name="log-file" value="logs/file.xml"/>
+</pre>
+</div>
+
+<div>
+<a id="property2"></a>
+<div class="title2">1.5.2 <div class="codeinline">default-package</div></div>
+<b>Value:</b> the name of the package<br>
+<b>Default:</b> none
+<br><br>If all classes in the package are renamed than Allatori will move these classes to the default package.
+The usage of <div class="codeinline">""</div> as default package can reduce the size of the resulting jar.
+<br><br>Examples:<br><br>
+<pre>
+    &lt;property name="default-package" value=""/>
+    &lt;property name="default-package" value="com.company"/>
+</pre>
+</div>
+
+<div>
+<a id="property3"></a>
+<div class="title2">1.5.3 <div class="codeinline">line-numbers</div></div>
+<b>Value:</b> obfuscate | remove | keep<br>
+<b>Default:</b> obfuscate
+<br><br>Values have the following meanings:<br><br>
+<div class="proptitle">keep</div>
+<div class="propmeaning">Leave debug information without modifications.
+This kind of option can be helpful for internal testing of your application. In other cases it's better to choose other options.
+<br><br>Stack trace will be reported like the following:<br><br>
+<pre>
+java.lang.NullPointerException
+        at com.company.c.a(Util.java:38)
+        at com.company.b.b(TraceTest.java:53)
+        at com.company.b.a(TraceTest.java:14)
+        at com.company.a.a(Main.java:27)
+</pre>
+</div>
+<br>
+<div class="proptitle">remove</div>
+<div class="propmeaning">This option can be used, when the size of your application matters really much, and in this case you can save much space by dint of removing debug information.
+<br><br>Stack trace will be reported like the following:<br><br>
+<pre>
+java.lang.NullPointerException
+        at com.company.c.a(Unknown Source)
+        at com.company.b.b(Unknown Source)
+        at com.company.b.a(Unknown Source)
+        at com.company.a.a(Unknown Source)
+<pre>
+</div>
+<br>
+<div class="proptitle">obfuscate</div>
+<div class="propmeaning">Debug information remains, but it's modified, and so the use of it without transforming simply stupefies the hacker. In this case it is absolutely impossible to understand where exactly the exception has taken place. But Allatori has a special utility, which allows reconstructing the original stack trace with the help of a substituted one. Debug information's substituting doesn't influence productivity at all and dwindles the code's size. It is desirable to use this option in the majority of cases.
+<br><br>Stack trace will be reported like the following:<br><br>
+<pre>
+java.lang.NullPointerException
+        at com.company.c.a(m:61)
+        at com.company.b.b(w:94)
+        at com.company.b.a(w:83)
+        at com.company.a.a(n:75)
+</pre>
+<br>After using Allatori Stack Trace Utility (<a href="../tutorial/step8/step8.html">Step&nbsp;8</a> of the tutorial) you will have the following stack trace report:<br><br>
+<pre>
+java.lang.NullPointerException
+        at com.company.c.a(Util.java:38)
+        at com.company.b.b(TraceTest.java:53)
+        at com.company.b.a(TraceTest.java:14)
+        at com.company.a.a(Main.java:27)
+</pre>
+</div>
+<br>Example:<br><br>
+<pre>
+    &lt;property name="line-numbers" value="obfuscate"/>
+</pre>
+</div>
+
+<div>
+<a id="property4"></a>
+<div class="title2">1.5.4 <div class="codeinline">string-encryption</div></div>
+<b>Value:</b> disable | enable | maximum<br>
+<b>Default:</b> enable
+<br><br>Values have the following meanings:<br><br>
+<div class="proptitle">disable</div>
+<div class="propmeaning">String encryption is disabled.
+</div>
+<br>
+<div class="proptitle">enable</div>
+<div class="propmeaning">String encryption is enabled.
+All string literals that can be safely changed with the encrypted version will be encrypted and Allatori will add a method to decrypt them on run-time.
+</div>
+<br>
+<div class="proptitle">maximum</div>
+<div class="propmeaning">Sometimes in the applications strings are compared such way:<br><br>
+<pre>
+String myString = "Hello";
+...
+public boolean test() {
+    return myString == "Hello";
+}
+</pre>
+<br>Though it is a bad practice to compare strings using <div class="codeinline">==</div> operator instead of <div class="codeinline">equals</div> method, but the <div class="codeinline">test</div> method in the above example will return true (because JVM caches String objects to reuse them within the same class). But after string encryption you can think that <div class="codeinline">test</div> method has the following code (this is the simplified example, in fact the code will differ):<br><br>
+<pre>
+public boolean test() {
+    return myString == new String("Hello");
+}
+</pre>
+<br>And this version of the test method will return false because compared objects are different.
+<br><br>If you assigned <div class="codeinline">string-encryption</div> property to the <div class="codeinline">enable</div> value then Allatori finds possibly incorrectly used strings and does not encrypt these strings to keep the application working correctly.
+<br><br>If you are sure that you do not use strings such way you can use the <div class="codeinline">maximum</div> value for the <div class="codeinline">string-encryption</div> property.
+</div>
+<br>Example:<br><br>
+<pre>
+    &lt;property name="string-encryption" value="enable"/>
+</pre>
+</div>
+
+<div>
+<a id="property5"></a>
+<div class="title2">1.5.5 <div class="codeinline">member-reorder</div></div>
+<b>Value:</b> disable | enable<br>
+<b>Default:</b> enable
+<br><br>Values have the following meanings:<br><br>
+<div class="proptitle">disable</div>
+<div class="propmeaning">Member reordering is disabled.
+</div>
+<br>
+<div class="proptitle">enable</div>
+<div class="propmeaning">Member reordering is enabled.
+Usually developers place interconnected methods and fields one after another in the source file, and this sequence will be kept after the compilation process.
+Allatori will shuffle fields and methods order in the classfile.
+</div>
+<br>Example:<br><br>
+<pre>
+    &lt;property name="member-reorder" value="enable"/>
+</pre>
+</div>
+
+<div>
+<a id="property6"></a>
+<div class="title2">1.5.6 <div class="codeinline">control-flow-obfuscation</div></div>
+<b>Value:</b> disable | enable<br>
+<b>Default:</b> enable
+<br><br>Values have the following meanings:<br><br>
+<div class="proptitle">disable</div>
+<div class="propmeaning">Control flow obfuscation is disabled.
+</div>
+<br>
+<div class="proptitle">enable</div>
+<div class="propmeaning">Control flow obfuscation is enabled.
+Allatori will slightly alter the control flow of the methods so that it will not change what the application performs at run-time but will make the automatic decompilation process much harder.
+</div>
+<br>Example:<br><br>
+<pre>
+    &lt;property name="control-flow-obfuscation" value="enable"/>
+</pre>
+</div>
+
+<div>
+<a id="property7"></a>
+<div class="title2">1.5.7 <div class="codeinline">fields-naming</div></div>
+<b>Value:</b> abc | compact | keywords<br>
+<b>Default:</b> compact
+<br><br>Values have the following meanings:<br><br>
+<div class="proptitle">abc</div>
+<div class="propmeaning">Fields will be renamed to the names 'a', 'b', 'c', 'd', etc.
+</div>
+<br>
+<div class="proptitle">compact</div>
+<div class="propmeaning">The renamer will use single-character names as much as possible, thus making the resulting jar smaller and harder to reverse-engineer.
+</div>
+<br>
+<div class="proptitle">keywords</div>
+<div class="propmeaning">The renamer will use Java reserved keywords (<div class="codeinline">if</div>
+, <div class="codeinline">for</div>
+, <div class="codeinline">int</div>, etc.) as names of the fields. Such naming is legal in class file format, but can confuse many decompilers.
+However, it makes the resulting jar file bigger.
+</div>
+<br>Example:<br><br>
+<pre>
+    &lt;property name="fields-naming" value="abc"/>
+</pre>
+</div>
+
+<div>
+<a id="property8"></a>
+<div class="title2">1.5.8 <div class="codeinline">methods-naming</div></div>
+<b>Value:</b> abc | compact | keywords<br>
+<b>Default:</b> compact
+<br><br>Values have the following meanings:<br><br>
+<div class="proptitle">abc</div>
+<div class="propmeaning">Methods will be renamed to the names 'a', 'b', 'c', 'd', etc.
+</div>
+<br>
+<div class="proptitle">compact</div>
+<div class="propmeaning">The renamer will use single-character names as much as possible, thus making the resulting jar smaller and harder to reverse-engineer.
+</div>
+<br>
+<div class="proptitle">keywords</div>
+<div class="propmeaning">The renamer will use Java reserved keywords (<div class="codeinline">if</div>
+, <div class="codeinline">for</div>
+, <div class="codeinline">int</div>, etc.) as names of the methods. Such naming is legal in class file format, but can confuse many decompilers.
+However, it makes the resulting jar file bigger.
+</div>
+<br>Example:<br><br>
+<pre>
+    &lt;property name="methods-naming" value="abc"/>
+</pre>
+</div>
+
+<div>
+<a id="property9"></a>
+<div class="title2">1.5.9 <div class="codeinline">local-variables-naming</div></div>
+<b>Value:</b> keep | remove | abc | single-name<br>
+<b>Default:</b> single-name
+<br><br>Values have the following meanings:<br><br>
+<div class="proptitle">keep</div>
+<div class="propmeaning">All local variables' names will be kept unchanged. This option is not recommended.
+</div>
+<br>
+<div class="proptitle">remove</div>
+<div class="propmeaning">The original local variable names information will be removed. It can reduce the size of the resulting jar.
+</div>
+<br>
+<div class="proptitle">abc</div>
+<div class="propmeaning">Local variables will be renamed to the unique names 'a', 'b', 'c', 'd', etc.
+</div>
+<br>
+<div class="proptitle">single-name</div>
+<div class="propmeaning">Almost all local variables will have the same name. It is allowed by the Java virtual machine but can confuse a lot of decompilers.
+</div>
+<br>Example:<br><br>
+<pre>
+    &lt;property name="local-variables-naming" value="abc"/>
+</pre>
+</div>
+
+<div>
+<a id="property10"></a>
+<div class="title2">1.5.10 <div class="codeinline">random-seed</div></div>
+<b>Value:</b> any string<br>
+<b>Default:</b> current time in milliseconds
+<br><br>Allatori uses random number generator for some types of obfuscation.
+If you want Allatori to produce the same resulting jar during several runs of the obfuscator you need to specify the seed for the random number generator.
+If no seed is specified then current time will be used as seed and resulting jars may be slightly different (i.e. different order of class members if 'member-reorder' algorithm is enabled).
+<br><br>Example:<br><br>
+<pre>
+    &lt;property name="random-seed" value="any text here"/>
+</pre>
+</div>
+
+<div>
+<a id="property11"></a>
+<div class="title2">1.5.11 <div class="codeinline">incremental-obfuscation</div></div>
+<b>Value:</b> the name of the previously created log file<br>
+<b>Default:</b> none
+<br><br>The property allows to set the log file of the previous Allatori run.<br><br>
+Incremental obfuscation is used when you need to create a patch or add-on to your application. In such case you need guarantee that new names of classes, methods and fields are consistent with the previously obfuscated version. Using log file generated during the previous run of Allatori as input when obfuscating the next release makes this two releases fully compatible. So a patch or add-on can be seamlessly integrated to the previously deployed application.
+<br><br>Note: When using incremental obfuscation you should include in the obfuscation process all your classes even if only some of them are to be distributed.
+<br><br>Example:<br><br>
+<pre>
+    &lt;property name="incremental-obfuscation" value="previous-log.xml"/>
+</pre>
+</div>
+
+
+<a id="expiry"></a><div class="title">1.6 <div class="codeinline">Expiry</div> Element</div>
+<div class="codeinline">Expiry</div> element is used to set expiry date to the obfuscated application. Expiry date checks are inserted not only in the <i>main</i> method and cannot be easily removed. This feature can be used in the libraries that do not even have <i>main</i> method.
+<br><br>The element has the following attributes:
+<br>1. <div class="codeinline">date</div> - required; expiry date in the yyyy/mm/dd format;
+<br>2. <div class="codeinline">string</div> - required; this string will be the message of the exception thrown if the application is run after the specified expiry date.
+<br><br>Example:<br><br>
+<pre>
+    &lt;expiry date="2010/01/01" string="EXPIRED!"/>
+</pre>
+<br>See <a href="../tutorial/step10/step10.html">step 10 of the tutorial</a> for more information.
+
+<a id="common-settings"></a><div class="title">2 Common settings</div>
+<b>1.</b> Preserving serialization members.<br><br>
+<pre>
+    &lt;keep-names>
+        &lt;class template="class * instanceof java.io.Serializable">
+            &lt;field template="static final long serialVersionUID"/>
+            &lt;method template="void writeObject(java.io.ObjectOutputStream)"/>
+            &lt;method template="void readObject(java.io.ObjectInputStream)"/>
+            &lt;method template="java.lang.Object writeReplace()"/>
+            &lt;method template="java.lang.Object readResolve()"/>
+        &lt;/class>
+    &lt;/keep-names>
+</pre>
+<br><br><b>2.</b> Applets.<br><br>
+<pre>
+    &lt;keep-names>
+        &lt;class template="class * instanceof java.applet.Applet"/>
+    &lt;/keep-names>
+</pre>
+<br><br><b>3.</b> Servlets.<br><br>
+<pre>
+    &lt;keep-names>
+        &lt;class template="class * instanceof javax.servlet.Servlet"/>
+    &lt;/keep-names>
+</pre>
+<br><br><b>4.</b> Midlets.<br><br>
+<pre>
+    &lt;keep-names>
+        &lt;class template="class * instanceof javax.microedition.midlet.MIDlet"/>
+    &lt;/keep-names>
+</pre>
+
+
+<a id="j2me-support"></a><div class="title">3 J2ME support (Sun Java Wireless Toolkit for CLDC plugin)</div>
+Allatori Obfuscator comes with the plugin for the Sun Java Wireless Toolkit for CLDC, thus making the obfuscation of your J2ME applications very easy.
+Moreover, Allatori automatically generates a configuration file for your WTK project.
+All you need is to configure WTK to use Allatori Obfuscator. You should copy Allatori jar file (allatori.jar)
+and add the following lines to the <i>ktools.properties</i> file:
+<pre>
+obfuscator.runner.class.name: com.allatori.wtk.WTKObfuscator
+obfuscator.runner.classpath: allatori.jar</pre>
+<br>The <i>ktools.properties</i> file is located at <i>&lt;WTK.dir&gt;\wtklib\&lt;Your-OS&gt;\</i> directory
+(for Windows it will be <i>&lt;WTK.dir&gt;\wtklib\Windows\</i>).
+<br><br>Now for obfuscating your application you just need to select "Project | Package | Create Obfuscated Package" menu
+option in the KToolBar application.
+<br><br>Allatori automatically generates the configuration file (<i>allatori.xml</i>) in your project directory.
+If you want to override some default configuration settings, you need to edit the <i>allatori.xml</i> file and make it read-only.
+
+
+<br><br><br><br>Additional information can be found in our
+<a href="../tutorial/index.html">Tutorial</a>
+and <a href="http://www.allatori.com/faq.html" target="_blank">FAQ</a>.
+<br>If you have any questions feel free to contact us.
+Our Support Department will answer all your questions and help you with configuring Allatori for your project.
+<br><br>Web: <a href="http://www.allatori.com" target="_blank">http://www.allatori.com</a>
+<br>Mail: <a href="mailto:support@allatori.com">support@allatori.com</a>
+</body>
+</html>

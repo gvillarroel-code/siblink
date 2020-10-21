@@ -1,0 +1,7 @@
+<config>
+    <jars>
+        <jar in="marked-mousegestures-1.2.jar"/>
+    </jars>
+
+    <watermark key="secure-key-to-extract-watermark"/>
+</config>
