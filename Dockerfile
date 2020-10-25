@@ -1,6 +1,6 @@
 FROM store/oracle/serverjre:1.8.0_241-b07
 RUN yum install -y wget
-RUN yum install -y net-tools
+#RUN yum install -y net-tools
 RUN yum install -y iputils
 RUN wget https://repo.mysql.com//mysql80-community-release-el7-3.noarch.rpm
 RUN yum-config-manager --enable mysql57-community
