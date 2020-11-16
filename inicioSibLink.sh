@@ -19,6 +19,6 @@ else
 	aa=""
 fi 
 
-java -Xms2G -Xmx2G -Duser.timezone=GMT-03:00 -jar SibLink.jar test $aa 1 
+java -Xms2G -Xmx2G -Duser.timezone=GMT-03:00 -jar SibLinkBER_GP_1.0.2.jar test $aa 1 
 
 
