@@ -1,1 +1,1 @@
-docker build --tag itservicegvillarroel/siblink:v1.0 .
+docker build --tag itservicegvillarroel/siblink-apm:v1.0.2 .

@@ -1,2 +1,2 @@
-docker push itservicegvillarroel/siblink:v1.0
+docker push itservicegvillarroel/siblink:v1.0.2
 
