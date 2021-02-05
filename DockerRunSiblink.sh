@@ -1,1 +1,1 @@
-docker run --name siblink --rm  -m 2G -e MODOINICIO="inic" itservicegvillarroel/siblink:v1.0
+docker run --name siblink --rm  -m 2G -e MODOINICIO="inic" itservicegvillarroel/siblink:v1.0.5

@@ -19,6 +19,6 @@ else
 	aa=""
 fi 
 
-java -Xms2G -Xmx2G -Duser.timezone=GMT-03:00 -jar SibLink_SLSFBmodo_1.0.5.jar test $aa 1 
+java -Xms2G -Xmx2G -Duser.timezone=GMT-03:00 -jar SibLink1.0.6.jar test $aa 1 
 
 

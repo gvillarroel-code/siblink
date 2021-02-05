@@ -64,3 +64,8 @@ java.net.UnknownHostException: dockerhost: Name or service not known
 ** END NESTED EXCEPTION **
 
 
+Msg: Feb 05 10:59:58
+Error: java.util.MissingResourceException: Can't find resource for bundle java.util.PropertyResourceBundle, key SLSFBmodo
+Msg: Feb 05 11:00:58
+Msg: Siblink versión BER-GP 1.0.6   Iniciado modo: REDOMNI
+Msg: Nuevo Banco de Entre Rios
